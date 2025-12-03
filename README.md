@@ -40,4 +40,4 @@
 
 ИШЙУ
 
-- [ ] https://github.com/DeniProtoshark/Copyparty-Auto-Sort/issues/1
+- [ ] [Баги | Улучшения](https://github.com/DeniProtoshark/Copyparty-Auto-Sort/issues/1)
