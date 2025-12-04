@@ -1,7 +1,7 @@
 # Автоматический сортировщик фото/видео файлов по годам/месяцам/дням для copyparty (возможно не только для него)
 
 ## Установка
-### 1. установите файлы из [uploader](https://github.com/DeniProtoshark/Copyparty-Auto-Sort/tree/Beta-RU/uploader).
+### 1. установите файлы из [uploader](https://github.com/DeniProtoshark/Copyparty-Auto-Sort/tree/Beta-RU/uploader). либо из релиза
 ### 2 Откройте файл .py и настройте 
 * ```DEFAULT_WATCH_DIR``` = куда вы скидываете файлы (мусорка)
 * ```DEFAULT_PHOTOS_ROOT``` = где будет формироватся иерархия в виде ГОД>МЕСЯЦ>ДЕНЬ
