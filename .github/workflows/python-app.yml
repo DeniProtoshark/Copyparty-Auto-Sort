@@ -1,0 +1,127 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python CI — Tests & Lints
+
+on:
+  push:
+    branches:
+      - 'Beta-RU'
+  pull_request:
+    branches:
+      - 'Beta-RU'
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test on Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.10, 3.11, 3.12]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install pip cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') || '' }}-${{ matrix.python-version }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -e
+          # Prefer requirements.txt, fall back to pyproject.toml / setup.py
+          if [ -f requirements.txt ]; then
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+          elif [ -f pyproject.toml ]; then
+            python -m pip install --upgrade pip
+            # install build tools then the package in editable mode if possible
+            pip install build
+            pip install --upgrade pip setuptools wheel
+            # If using poetry-style project, try to install with pip
+            pip install .
+          elif [ -f setup.py ]; then
+            python -m pip install --upgrade pip
+            pip install -e .
+          else
+            echo "No requirements.txt, pyproject.toml or setup.py found — skipping dependency install"
+          fi
+
+      - name: Create reports dir
+        run: mkdir -p reports
+
+      - name: Run tests (pytest)
+        env:
+          PYTHONWARNINGS: default::DeprecationWarning
+        run: |
+          set -e
+          # run pytest if installed / tests exist
+          if python -c "import pytest" &> /dev/null; then
+            pytest -q --junitxml=reports/junit.xml --cov=. --cov-report=xml:reports/coverage.xml
+          else
+            echo "pytest not installed or not available; skipping tests."
+          fi
+
+      - name: Run flake8 (optional)
+        continue-on-error: true
+        run: |
+          if python -c "import flake8" &> /dev/null; then
+            # allow flake8 config to control behaviour; return non-zero will not fail job because continue-on-error: true
+            flake8 .
+          else
+            echo "flake8 not installed — skipping lint."
+          fi
+
+      - name: Run mypy (optional)
+        continue-on-error: true
+        run: |
+          if python -c "import mypy" &> /dev/null || command -v mypy &> /dev/null ; then
+            # run mypy if configured; adjust target package/module as needed
+            mypy .
+          else
+            echo "mypy not installed — skipping static type check."
+          fi
+
+      - name: Upload test reports (JUnit, coverage)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-${{ matrix.python-version }}
+          path: reports/
+
+      - name: Upload logs (debug)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: workspace-snapshot-${{ matrix.python-version }}
+          path: |
+            .  # careful: this uploads the whole workspace; change to specific files if you prefer
+          # To avoid excessive uploads, you might restrict to specific logs:
+          # path: |
+          #   reports/
+          #   .pytest_cache/
+
+  # optional job: quick-check for repo health on latest python only (example)
+  quick-check:
+    name: Quick check (single runner)
+    runs-on: ubuntu-latest
+    needs: []
+    steps:
+      - uses: actions/checkout@v4
+      - name: Quick lint files present
+        run: |
+          echo "Files in repo root:"
+          ls -la
