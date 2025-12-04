@@ -40,4 +40,11 @@
 
 ИШЙУ
 
-- [ ] [Баги | Улучшения](https://github.com/DeniProtoshark/Copyparty-Auto-Sort/issues/1)
+| Баги | Улучшения |
+|------|-----------|
+| [![Статус](https://img.shields.io/github/issues/detail/state/DeniProtoshark/Copyparty-Auto-Sort/1?label=%20&style=flat-square)](https://github.com/DeniProtoshark/Copyparty-Auto-Sort/issues/1) | [![Статус](https://img.shields.io/github/issues/detail/state/DeniProtoshark/Copyparty-Auto-Sort/1?label=%20&style=flat-square)](https://github.com/DeniProtoshark/Copyparty-Auto-Sort/issues/1) |
+
+
+
+
+
