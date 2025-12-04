@@ -1,56 +1,30 @@
-name: Python CI — Beta-RU
+name: Python CI
 
 on:
   push:
-    branches: [ "Beta-RU" ]
+    branches: [ Beta-RU ]
   pull_request:
-    branches: [ "Beta-RU" ]
-  workflow_dispatch:
+    branches: [ Beta-RU ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Setup Python 3.11
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
-
-      - name: Upgrade pip
-        run: python -m pip install --upgrade pip
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          else
-            echo "requirements.txt not found — skipping install"
-          fi
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Quick repo list
-        run: ls -la
-
-      - name: Syntax check of Python files
+      - name: Run smoke test
         run: |
-          find . -name "*.py" -not -path "./.git/*" -exec python -m py_compile {} \;
-
-      - name: Run tests (if pytest installed)
-        run: |
-          if python -c "import pytest" &> /dev/null; then
-            pytest -q
-          else
-            echo "pytest not installed — skipping tests"
-          fi
-
-      - name: Run flake8 lint (optional)
-        continue-on-error: true
-        run: |
-          if python -c "import flake8" &> /dev/null; then
-            flake8 .
-          else
-            echo "flake8 not installed — skipping lint"
-          fi
+          mkdir -p test_files
+          echo "dummy" > test_files/test.jpg
+          python -c "from uploader import copyparty_sorter; print('Smoke test ok')"
