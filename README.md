@@ -26,6 +26,13 @@
 или
   * ``` pip install -r requirements.txt ``` [уже всё прописано в requirements.txt]
 
+## Баги | Улучшения
+
+| Баги | Предложения |
+|------|-----------|
+| [![Bug Status](https://img.shields.io/github/issues/detail/state/DeniProtoshark/Copyparty-Auto-Sort/2?label=%20&style=flat-square)](https://github.com/DeniProtoshark/Copyparty-Auto-Sort/issues/2) | [![Enh Status](https://img.shields.io/github/issues/detail/state/DeniProtoshark/Copyparty-Auto-Sort/3?label=%20&style=flat-square)](https://github.com/DeniProtoshark/Copyparty-Auto-Sort/issues/3) |
+
+
 ## Поддерживаемые форматы
 
 | Категория | Форматы |
@@ -38,11 +45,7 @@
 <img width="557" height="315" alt="image" src="https://github.com/user-attachments/assets/81af89db-c6aa-49fe-a39d-446d064d86ef" />
 <img width="557" height="315" alt="image" src="https://github.com/user-attachments/assets/77882ccf-d054-4789-be7b-7b66bbeab67e" />
 
-ИШЙУ
 
-| Баги | Улучшения |
-|------|-----------|
-| [![Статус](https://img.shields.io/github/issues/detail/state/DeniProtoshark/Copyparty-Auto-Sort/1?label=%20&style=flat-square)](https://github.com/DeniProtoshark/Copyparty-Auto-Sort/issues/1) | [![Статус](https://img.shields.io/github/issues/detail/state/DeniProtoshark/Copyparty-Auto-Sort/1?label=%20&style=flat-square)](https://github.com/DeniProtoshark/Copyparty-Auto-Sort/issues/1) |
 
 
 
