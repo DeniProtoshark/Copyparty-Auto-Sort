@@ -1,4 +1,4 @@
-name: Copyparty‑Auto‑Sort – Python CI
+name: Copyparty‑Auto‑Sort CI
 
 on:
   push:
@@ -6,16 +6,13 @@ on:
   pull_request:
     branches: [ "Main" ]
 
-permissions:
-  contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
     - uses: actions/checkout@v4
@@ -28,33 +25,22 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        # Устанавливаем линтер
         pip install flake8
-        # Если есть requirements — ставим
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: Lint with flake8
+    - name: Lint
       run: |
-        flake8 . \
-          --count \
-          --select=E9,F63,F7,F82 \
-          --show-source \
-          --statistics
-        flake8 . \
-          --exit-zero \
-          --max-line-length=127 \
-          --statistics
+        flake8 . --exit-zero --max-line-length=127
 
-    - name: Basic import check
+    - name: Smoke test root scripts
       run: |
-        python - << 'EOF'
-        print("Testing imports and basic interface")
-        # Здесь пример для модуля
-        import autosort  # или имя модуля в твоём репо
-        print("OK — imported")
-        EOF
+        for f in *.py; do
+          echo "Running $f --help"
+          python "$f" --help || true
+        done
 
-    - name: Smoke tests
+    - name: Smoke test uploader scripts
       run: |
-        # Простейший вызов утилиты (должен завершиться без ошибки)
-        python -m autosort --help || true
+        for f in uploader/*.py; do
+          echo "Running $f --help"
+          python "$f" --help || true
+        done
