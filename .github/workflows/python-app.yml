@@ -2,9 +2,9 @@ name: Copyparty‑Auto‑Sort – Python CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "Main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "Main" ]
 
 permissions:
   contents: read
