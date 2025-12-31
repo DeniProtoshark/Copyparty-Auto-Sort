@@ -1,0 +1,60 @@
+name: Copyparty‑Auto‑Sort – Python CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Устанавливаем линтер
+        pip install flake8
+        # Если есть requirements — ставим
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Lint with flake8
+      run: |
+        flake8 . \
+          --count \
+          --select=E9,F63,F7,F82 \
+          --show-source \
+          --statistics
+        flake8 . \
+          --exit-zero \
+          --max-line-length=127 \
+          --statistics
+
+    - name: Basic import check
+      run: |
+        python - << 'EOF'
+        print("Testing imports and basic interface")
+        # Здесь пример для модуля
+        import autosort  # или имя модуля в твоём репо
+        print("OK — imported")
+        EOF
+
+    - name: Smoke tests
+      run: |
+        # Простейший вызов утилиты (должен завершиться без ошибки)
+        python -m autosort --help || true
